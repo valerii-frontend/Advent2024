@@ -21,8 +21,10 @@ Scan the corrupted memory for uncorrupted mul instructions. What do you get if y
 
 import { parseText } from "../parseText.js";
 
-const data = await parseText(3, "input");
+export const data = await parseText(3, "input");
+
 const regex = /mul\(\d+,\d+\)/g;
+
 const matches = data.match(regex);
 
 const results = matches.map((str) => {
