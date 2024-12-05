@@ -47,22 +47,35 @@ _____#_____
 Make sure to use line breaks \n at the end of each line, except for the last one.
 */
 
-function generateRowWith1(width, ornament) {
-  const space = (width - 1) / 2;
-  return "_".repeat(space) + ornament + "_".repeat(space);
-}
-
 function createXmasTree(height, ornament) {
-  let tree = "";
-  let rowSize = 1;
   const width = height * 2 - 1;
-  while (rowSize <= width) {
-    const space = "_".repeat(Math.floor((width - rowSize) / 2));
-    tree += `${space}${ornament.repeat(rowSize)}${space}\n`;
-    rowSize += 2;
+  let tree = "";
+
+  for (let row = 1; row <= width; row += 2) {
+    const space = (width - row) / 2;
+    tree += "_".repeat(space) + ornament.repeat(row) + "_".repeat(space) + "\n";
   }
-  tree += generateRowWith1(width, "#") + "\n" + generateRowWith1(width, "#");
+  const s = (width - 1) / 2;
+  tree += "_".repeat(s) + "#" + "_".repeat(s) + "\n" + "_".repeat(s) + "#" + "_".repeat(s);
   return tree;
 }
 
-console.log(createXmasTree(5, "*"));
+function createXmasTree(height, ornament) {
+  const width = height * 2 - 1;
+  let tree = "";
+
+  for (let row = 1; row <= width; row += 2) {
+    tree += "_".repeat(Math.floor((width - row) / 2));
+    tree += ornament.repeat(row);
+    tree += "_".repeat(Math.floor((width - row) / 2));
+    tree += "\n";
+  }
+
+  tree += "_".repeat((width - 1) / 2);
+  tree += "#";
+  tree += "_".repeat((width - 1) / 2) + "\n";
+  tree += "_".repeat((width - 1) / 2);
+  tree += "#";
+  tree += "_".repeat((width - 1) / 2);
+  return tree;
+}
