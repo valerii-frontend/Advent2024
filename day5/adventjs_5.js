@@ -1,81 +1,58 @@
 /*
-It's time to put up the Christmas tree at home! 🎄 But this year we want it to be special. We're going to create a function that receives the height of the tree (a positive integer between 1 and 100) and a special character to decorate it.
+Santa Claus's elves 🧝🧝‍♂️ have found a bunch of mismatched magic boots in the workshop. Each boot is described by two values:
 
-The function should return a string that represents the Christmas tree, constructed as follows:
+type indicates if it's a left boot (I) or a right boot (R).
+size indicates the size of the boot.
+Your task is to help the elves pair all the boots of the same size having a left and a right one. To do this, you should return a list of the available boots after pairing them.
 
-The tree is made up of triangles of special characters.
-The spaces on the sides of the tree are represented with underscores _.
-All trees have a trunk of two lines, represented by the # character.
-The tree should always have the same length on each side.
-You must ensure the tree has the correct shape using line breaks \n for each line.
-Examples:
+Note: You can have more than one pair of boots of the same size!
 
-const tree = createXmasTree(5, '*')
-console.log(tree)
+const shoes = [
+  { type: 'I', size: 38 },
+  { type: 'R', size: 38 },
+  { type: 'R', size: 42 },
+  { type: 'I', size: 41 },
+  { type: 'I', size: 42 }
+]
 
-____*____
-___***___
-__*****__
-_*******_
-*********
-____#____
-____#____
+organizeShoes(shoes)
+// [38, 42]
 
+const shoes2 = [
+  { type: 'I', size: 38 },
+  { type: 'R', size: 38 },
+  { type: 'I', size: 38 },
+  { type: 'I', size: 38 },
+  { type: 'R', size: 38 }
+]
+// [38, 38]
 
-const tree2 = createXmasTree(3, '+')
-console.log(tree2)
+const shoes3 = [
+  { type: 'I', size: 38 },
+  { type: 'R', size: 36 },
+  { type: 'R', size: 42 },
+  { type: 'I', size: 41 },
+  { type: 'I', size: 43 }
+]
 
-__+__
-_+++_
-+++++
-__#__
-__#__
-
-
-const tree3 = createXmasTree(6, '@')
-console.log(tree3)
-
-_____@_____
-____@@@____
-___@@@@@___
-__@@@@@@@__
-_@@@@@@@@@_
-@@@@@@@@@@@
-_____#_____
-_____#_____
-
-Make sure to use line breaks \n at the end of each line, except for the last one.
+organizeShoes(shoes3)
+// []
 */
+function organizeShoes(shoes) {
+  const hash = {};
+  const pairs = [];
 
-function createXmasTree(height, ornament) {
-  const width = height * 2 - 1;
-  let tree = "";
-
-  for (let row = 1; row <= width; row += 2) {
-    const space = (width - row) / 2;
-    tree += "_".repeat(space) + ornament.repeat(row) + "_".repeat(space) + "\n";
-  }
-  const s = (width - 1) / 2;
-  tree += "_".repeat(s) + "#" + "_".repeat(s) + "\n" + "_".repeat(s) + "#" + "_".repeat(s);
-  return tree;
-}
-
-function createXmasTree(height, ornament) {
-  const width = height * 2 - 1;
-  let tree = "";
-
-  for (let row = 1; row <= width; row += 2) {
-    tree += "_".repeat(Math.floor((width - row) / 2));
-    tree += ornament.repeat(row);
-    tree += "_".repeat(Math.floor((width - row) / 2));
-    tree += "\n";
+  for (const { type, size } of shoes) {
+    hash[size] ||= {};
+    hash[size][type] = (hash[size][type] || 0) + 1;
   }
 
-  tree += "_".repeat((width - 1) / 2);
-  tree += "#";
-  tree += "_".repeat((width - 1) / 2) + "\n";
-  tree += "_".repeat((width - 1) / 2);
-  tree += "#";
-  tree += "_".repeat((width - 1) / 2);
-  return tree;
+  for (const size in hash) {
+    while (hash[size]["I"] && hash[size]["R"]) {
+      pairs.push(+size);
+      hash[size]["I"]--;
+      hash[size]["R"]--;
+    }
+  }
+  return pairs;
 }
