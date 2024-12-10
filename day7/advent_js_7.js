@@ -32,7 +32,7 @@ function fixPackages(packages) {
   for (let char of packages) {
     if (char === ")") {
       let reversed = "";
-      while (stack[stack.length - 1] !== "(") {
+      while (stack.at(-1) !== "(") {
         reversed += stack.pop();
       }
 
