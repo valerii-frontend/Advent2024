@@ -43,22 +43,23 @@ function drawTable(data) {
   const keys = Object.keys(data[0]);
   const headers = keys.map((key) => key.charAt(0).toUpperCase() + key.slice(1));
 
-  const lengths = keys.reduce((acc, key) => {
-    acc[key] = Math.max(key.length, ...data.map((row) => String(row[key]).length));
+  const widths = keys.reduce((acc, key) => {
+    acc[key] = Math.max(key.length, ...data.map((row) => ("" + row[key]).length));
     return acc;
   }, {});
-  const withBorders = (s) => "| " + s.join(" | ") + " |";
 
-  const border = `+-${keys.map((key) => "-".repeat(lengths[key])).join("-+-")}-+`;
-  const tableHead = withBorders(keys.map((key, i) => headers[i].padEnd(lengths[key])));
+  const addFrame = (s) => "| " + s.join(" | ") + " |";
 
-  const table = [border, tableHead, border];
+  const frame = `+-${keys.map((key) => "-".repeat(widths[key])).join("-+-")}-+`;
+  const tableHead = addFrame(keys.map((key, i) => headers[i].padEnd(widths[key])));
+
+  const table = [frame, tableHead, frame];
 
   for (const row of data) {
-    const content = keys.map((key) => ("" + row[key]).padEnd(lengths[key]));
-    table.push(withBorders(content));
+    const content = keys.map((key) => ("" + row[key]).padEnd(widths[key]));
+    table.push(addFrame(content));
   }
-  table.push(border);
+  table.push(frame);
   return table.join("\n");
 }
 
