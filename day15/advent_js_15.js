@@ -43,15 +43,10 @@ function drawTable(data) {
   const keys = Object.keys(data[0]);
   const headers = keys.map((key) => key.charAt(0).toUpperCase() + key.slice(1));
 
-  const lengths = {};
-  for (let key of keys) {
-    lengths[key] = key.length;
-
-    for (let i = 0; i < data.length; i++) {
-      const length = String(data[i][key]).length;
-      if (length > lengths[key]) lengths[key] = length;
-    }
-  }
+  const lengths = keys.reduce((acc, key) => {
+    acc[key] = Math.max(key.length, ...data.map((row) => String(row[key]).length));
+    return acc;
+  }, {});
   const withBorders = (s) => "| " + s.join(" | ") + " |";
 
   const border = `+-${keys.map((key) => "-".repeat(lengths[key])).join("-+-")}-+`;
@@ -66,3 +61,9 @@ function drawTable(data) {
   table.push(border);
   return table.join("\n");
 }
+
+drawTable([
+  { gift: "Doll", quantity: 10 },
+  { gift: "Book", quantity: 5 },
+  { gift: "Music CD", quantity: 1 },
+]);
