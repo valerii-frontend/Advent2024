@@ -36,14 +36,12 @@ detectBombs([
 // ]
 Note: Want a hint? You've surely played the Minesweeper game before… 😉
 */
-// 3/5 ***
+
 function detectBombs(grid) {
-  if (grid.length === 0 || grid[0].length === 0) return [];
-
   const rows = grid.length;
-  const cols = grid[0].length;
-  const bombs = Array.from({ length: rows }, () => Array(cols).fill(0));
+  const cols = grid[0]?.length || 0;
 
+  const bombCounts = Array.from({ length: rows }, () => Array(cols).fill(0));
   const directions = [
     [-1, -1],
     [-1, 0],
@@ -57,27 +55,19 @@ function detectBombs(grid) {
 
   for (let row = 0; row < rows; row++) {
     for (let col = 0; col < cols; col++) {
-      if (grid[row][col]) {
-        bombs[row][col] = -1; // Mark bomb cells with -1
-        directions.forEach(([dx, dy]) => {
-          const newRow = row + dx;
-          const newCol = col + dy;
-          if (newRow >= 0 && newRow < rows && newCol >= 0 && newCol < cols && bombs[newRow][newCol] !== -1) {
-            bombs[newRow][newCol]++;
-          }
-        });
+      let bombCount = 0;
+
+      for (const [dy, dx] of directions) {
+        const newRow = row + dy;
+        const newCol = col + dx;
+        if (newRow >= 0 && newRow < rows && newCol >= 0 && newCol < cols) {
+          bombCount += grid[newRow][newCol];
+        }
       }
+
+      bombCounts[row][col] = bombCount;
     }
   }
 
-  // Replace -1 with 0 for bomb cells
-  for (let row = 0; row < rows; row++) {
-    for (let col = 0; col < cols; col++) {
-      if (bombs[row][col] === -1) {
-        bombs[row][col] = 0;
-      }
-    }
-  }
-
-  return bombs;
+  return bombCounts;
 }
