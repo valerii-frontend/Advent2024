@@ -40,30 +40,29 @@ drawTable([
 // +----------+----------+
 */
 function drawTable(data) {
-  if (!data || data.length === 0) {
-    return "";
+  const keys = Object.keys(data[0]);
+  const headers = keys.map((key) => key.charAt(0).toUpperCase() + key.slice(1));
+
+  const lengths = {};
+  for (let key of keys) {
+    lengths[key] = key.length;
+
+    for (let i = 0; i < data.length; i++) {
+      const length = String(data[i][key]).length;
+      if (length > lengths[key]) lengths[key] = length;
+    }
   }
+  const withBorders = (s) => "| " + s.join(" | ") + " |";
 
-  const headers = Object.keys(data[0]);
-  const capitalizedHeaders = headers.map((header) => header[0].toUpperCase() + header.slice(1));
-  const columnWidths = headers.map((header) => {
-    return Math.max(header.length, ...data.map((row) => String(row[header]).length));
-  });
-  const pad = (str, width) => str + " ".repeat(width - str.length);
-  const separator = "+" + columnWidths.map((width) => "-".repeat(width + 2)).join("+") + "+";
-  const headerRow = "| " + capitalizedHeaders.map((header, i) => pad(header, columnWidths[i])).join(" | ") + " |";
-  const dataRows = data.map((row) => {
-    return "| " + headers.map((header, i) => pad(String(row[header]), columnWidths[i])).join(" | ") + " |";
-  });
+  const border = `+-${keys.map((key) => "-".repeat(lengths[key])).join("-+-")}-+`;
+  const tableHead = withBorders(keys.map((key, i) => headers[i].padEnd(lengths[key])));
 
-  return [separator, headerRow, separator, ...dataRows, separator].join("\n");
+  const table = [border, tableHead, border];
+
+  for (const row of data) {
+    const content = keys.map((key) => ("" + row[key]).padEnd(lengths[key]));
+    table.push(withBorders(content));
+  }
+  table.push(border);
+  return table.join("\n");
 }
-
-// Example usage
-console.log(
-  drawTable([
-    { name: "Alice", city: "London" },
-    { name: "Bob", city: "Paris" },
-    { name: "Charlie", city: "New York" },
-  ])
-);
