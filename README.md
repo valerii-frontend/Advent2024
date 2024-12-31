@@ -1,4 +1,7 @@
 # Advent events 2024
 
-## [Advent JS](https://adventjs.dev/)
-## [AdventOfCode](https://adventofcode.com/)
+![](logo.png)
+
+## [Advent JS](https://adventjs.dev/) - completed ✅
+
+## [AdventOfCode](https://adventofcode.com/) - not finished ❌ (only 4 days completed)
